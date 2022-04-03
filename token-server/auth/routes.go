@@ -2,7 +2,6 @@ package auth
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -12,21 +11,21 @@ import (
 )
 
 var Resource = http.HandlerFunc(ResourceHandler) // requires custom middleware, so make a handler function from it
+var err error                                    // single error object, err will be constantly reassigned and returned if not empty
 
-// ResourceHandler - Verifies user credentials before transferring a resource file back
+// ResourceHandler - Verifies user credentials before transferring a resource file back from the assets folder
 func ResourceHandler(res http.ResponseWriter, req *http.Request) {
 	// verify user
 	//decode json data
 	var input map[string]string
-	if err := json.NewDecoder(req.Body).Decode(&input); err != nil { // inform client of any error in decoding
+	if err = json.NewDecoder(req.Body).Decode(&input); err != nil { // inform client of any error in decoding
 		http.Error(res, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 	// verify input token
 	token := strings.Split(req.Header.Get("Authorization"), " ")[1]
-	err := ValidateJWT([]byte(token))
+	err = ValidateJWT([]byte(token))
 	if err != nil {
-		fmt.Println(err.Error())
 		http.Error(res, "Invalid token", http.StatusUnauthorized)
 		return
 	}
@@ -71,8 +70,7 @@ func ResourceHandler(res http.ResponseWriter, req *http.Request) {
 
 	// credentials are valid now, now check if requested resource exists
 	requestedFile := "." + strings.TrimPrefix(req.RequestURI, "/api")
-	fmt.Println("Requested for", requestedFile)
-	if _, err := os.Stat(requestedFile); err == nil {
+	if _, err = os.Stat(requestedFile); err == nil {
 		// resource exists
 		res.WriteHeader(http.StatusOK)
 		//determine content type of resource
@@ -127,7 +125,7 @@ func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	// delete token
-	if err := database.Delete(result); err != nil {
+	if err = database.Delete(result); err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -142,7 +140,7 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 
 	// decode the JSON body into a User object
 	var input map[string]string
-	if err := json.NewDecoder(req.Body).Decode(&input); err != nil { // inform client of any error in decoding
+	if err = json.NewDecoder(req.Body).Decode(&input); err != nil { // inform client of any error in decoding
 		http.Error(res, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
@@ -191,7 +189,7 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		// update the database with the new token
-		if err := database.Update(&database.User{
+		if err = database.Update(&database.User{
 			Username: input["username"],
 			Password: []byte(input["password"]),
 			Token:    token,
@@ -213,20 +211,20 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 // RegistrationHandler - grants tokens to new users and refreshes tokens for old ones
 func RegistrationHandler(res http.ResponseWriter, req *http.Request) {
 	// decode JSON request into an object
-	var input map[string]any
+	var input map[string]string
 
 	// decode the JSON data, inform client of any error
-	if err := json.NewDecoder(req.Body).Decode(&input); err != nil {
-		// record(req)
+	if err = json.NewDecoder(req.Body).Decode(&input); err != nil {
 		http.Error(res, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
-	if username, password := input["username"].(string), input["password"].(string); username == "" && password == "" {
+	// verify that the JSON input is not empty
+	if username, password := input["username"], input["password"]; username == "" && password == "" {
 		http.Error(res, "Invalid JSON body", http.StatusBadRequest)
 		return
 	}
 	// user shouldn't exist already so check for their existence in the database
-	result, err := database.Retrieve(input["username"].(string))
+	result, err := database.Retrieve(input["username"])
 	if result != nil {
 		// user already exists case
 		http.Error(res, "Wrong endpoint, request /api/login", http.StatusBadRequest)
@@ -238,24 +236,27 @@ func RegistrationHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Create a new user
-	token, err := GenerateJWT(input["username"].(string)) // assign a new JWT token
+	token, err := GenerateJWT(input["username"]) // assign a new JWT token
 	if err != nil {
 		// if there was an error, let client know
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	// hash the password before storing it
-	hash, err := bcrypt.GenerateFromPassword([]byte(input["password"].(string)), 14)
+	hash, err := bcrypt.GenerateFromPassword([]byte(input["password"]), 14)
 	if err != nil {
 		// if there was an error, let the client know
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := database.Create(&database.User{
-		Username: input["username"].(string),
+	// create an anonymous User object with fields to store (username, hashed password, valid token)
+	// store the User object
+	if err = database.Create(&database.User{
+		Username: input["username"],
 		Password: hash,
 		Token:    token,
 	}); err != nil {
+		// inform client of error
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -267,13 +268,14 @@ func RegistrationHandler(res http.ResponseWriter, req *http.Request) {
 
 // GetContentType - helper function that determines the Content-Type header value from a file on your local machine
 func GetContentType(filepath string) (string, error) {
+	// open the file
 	file, err := os.Open(filepath)
 	if err != nil {
 		return "", err
 	}
-	defer file.Close()
 	buffer := make([]byte, 512)
 	_, err = file.Read(buffer)
+	file.Close()
 	if err != nil {
 		return "", err
 	}
