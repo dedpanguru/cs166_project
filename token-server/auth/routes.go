@@ -2,11 +2,13 @@ package auth
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"os"
 	"strings"
 	"token-server/database"
 
+	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -16,7 +18,7 @@ var err error                                    // single error object, err wil
 // ResourceHandler - Verifies user credentials before transferring a resource file back from the assets folder
 func ResourceHandler(res http.ResponseWriter, req *http.Request) {
 	// verify user
-	//decode json data
+	// decode json data
 	var input map[string]string
 	if err = json.NewDecoder(req.Body).Decode(&input); err != nil { // inform client of any error in decoding
 		http.Error(res, err.Error(), http.StatusUnprocessableEntity)
@@ -69,10 +71,10 @@ func ResourceHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// credentials are valid now, now check if requested resource exists
-	requestedFile := "." + strings.TrimPrefix(req.RequestURI, "/api")
-	if _, err = os.Stat(requestedFile); err == nil {
+	requestedFile := mux.Vars(req)["resource"]
+	if _, err = os.Stat("./assets/" + requestedFile); err == nil {
 		// resource exists
-		res.WriteHeader(http.StatusOK)
+		res.WriteHeader(http.StatusAccepted)
 		//determine content type of resource
 		contentType, err := GetContentType(requestedFile)
 		// default content-type will be application/octet-stream
@@ -80,9 +82,17 @@ func ResourceHandler(res http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			contentType = "application/octet-stream"
 		}
-		res.Header().Set("Content-Disposition", "attachment; filename=\""+strings.TrimPrefix(requestedFile, "./assets/")+"\"")
+		res.Header().Set("Content-Disposition", "attachment; filename=\""+requestedFile+"\"")
 		res.Header().Set("Content-Type", contentType)
-		http.ServeFile(res, req, requestedFile)
+		//send file contents
+		file, err := os.Open("./assets/" + requestedFile)
+		if err != nil {
+			file.Close()
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer file.Close()
+		io.Copy(res, file)
 	} else {
 		// resource doesn't exist, respond with 404
 		res.WriteHeader(http.StatusNotFound)
