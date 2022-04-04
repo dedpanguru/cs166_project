@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: auth-db
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DATABASE=tokens
+    ports:
+      - ${DBPORT-5432}:5432
+
+  token-server:
+    build: 
+      dockerfile: Dockerfile
+    container_name: go-token
+    volumes:
+     - ./:/build
+    ports:
+     - ${PORT-8080}:8080 
+    env_file:
+      - token-server.env
+    depends_on:
+      - postgres
+  
+    
