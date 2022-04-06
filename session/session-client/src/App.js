@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Home from "./components/Home";
 import "./index.css";
 import { Routes, Route, Link, BrowserRouter } from "react-router-dom";
+import Register from "./components/Register";
+import Main from "./components/Main";
 
 function App() {
   const [data, setData] = useState(null);
@@ -25,9 +27,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Home />} />
-      <Route path="/register" element={<Home />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/main" element={<Main />} />
     </Routes>
   );
 }

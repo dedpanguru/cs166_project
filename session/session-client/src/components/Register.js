@@ -1,19 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
-const Home = () => {
-  const hanlder = () => {
-    axios.get("/home").then((res) => {
-      console.log(res.data);
-    });
-  };
-
+const Register = () => {
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center">
-      <h1 className="font-bold text-6xl">Welcome</h1>
-      {/* <p className="m-2">Please login</p> */}
+      <h1 className="font-bold text-6xl">Register</h1>
       <form className="m-8 space-y-4">
         <div>
           <LabelPrimitive.Root htmlFor="name">Name</LabelPrimitive.Root>
@@ -33,16 +25,12 @@ const Home = () => {
             autocomplete="off"
           />
         </div>
-        <div
-          className="bg-blue-400 p-3 rounded-md text-center cursor-pointer"
-          onClick={() => hanlder()}
-        >
-          Log In
+        <div className="bg-blue-400 p-3 rounded-md text-center cursor-pointer">
+          Register
         </div>
-        <div className="w-full flex justify-between space-x-4">
-          <p>Don't have an account yet?</p>
-          <Link className="text-blue-400" to="/register">
-            Register
+        <div className="items-center justify-center text-center">
+          <Link className="text-blue-400" to="/">
+            Return to login
           </Link>
         </div>
       </form>
@@ -50,4 +38,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Register;
