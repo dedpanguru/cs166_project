@@ -211,14 +211,11 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		// send token back to client
-		res.WriteHeader(http.StatusAccepted)
-		res.Header().Set("Content-Type", "text/plain")
-		res.Write(token)
-	} else {
-		// username, password, and token were all valid
-		http.Error(res, "You are already logged in, why did you request this endpoint?", http.StatusBadRequest)
 	}
+	// send token back to client
+	res.WriteHeader(http.StatusAccepted)
+	res.Header().Set("Content-Type", "text/plain")
+	res.Write(token)
 }
 
 // RegistrationHandler - grants tokens to new users and refreshes tokens for old ones
