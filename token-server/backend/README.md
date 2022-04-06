@@ -6,7 +6,7 @@
    * you could run it in this folder until a frontend is in place
 4. Server will be running on http://0.0.0.0:<port assigned to it by the docker compose file, defaults to 8080>
    * customize which port to run it on by setting your system's ```SERVER_PORT``` environment variable to the desired port number
-   * You can also customize the port number the database will run on by assigning your system's 
+   * You can also customize the port number the database will run on by assigning your system's ```DBPORT``` environment variable to your desired port number, but it will default to port 5432
 ## 4 endpoints:
 1. **/api/register** = user registration endpoint
    * Requires JSON body with the following format:
