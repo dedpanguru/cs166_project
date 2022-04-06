@@ -1,24 +1,4 @@
-# JSON Web Token Server
-## Setup
-1. Install Docker on your computer
-2. Clone repository onto your computer
-3. Configure the enviornment for the server by making a ```.env``` file in this folder.
-   * Add these values to the ```.env``` file
-   ```
-   DOMAIN=0.0.0.0
-   DBHOST=host.docker.internal
-   DBPORT=5432
-   DBNAME=tokens
-   DBUSER=root
-   DBPASS=password
-   SECRET=
-   ```
-   * SECRET is the server's secret key which will be used to generate and validate the tokens it issues
-   * You can set it to whatever string you want
-5. Run ```docker compose up``` in cs166_project/token-server
-   * you could run it in this folder until a frontend is in place
-6. Server will be running on http://0.0.0.0:<port assigned to it by the docker compose file, defaults to 8080>
-   * customize which port to run it on by setting your system's ```SERVER_PORT``` environment variable to the desired port number
+# Token Server Backend
 ## 4 endpoints:
 1. **/api/register** = user registration endpoint
    * Requires JSON body with the following format:
