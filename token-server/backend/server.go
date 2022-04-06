@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -24,7 +23,5 @@ func main() {
 	router.Handle("/api/assets/{resource}", auth.TokenMiddleware(auth.Resource)).Methods("GET")
 	router.Use(auth.Middleware)
 	// start router
-	URL := os.Getenv("DOMAIN") + ":8080"
-	fmt.Println("API serving on http://" + URL)
-	log.Fatal(http.ListenAndServe(URL, router))
+	log.Fatal(http.ListenAndServe(os.Getenv("DOMAIN")+":8080", router))
 }

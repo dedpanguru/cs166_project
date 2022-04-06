@@ -115,7 +115,7 @@ func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 	// user should exist already so check for their existence in the database
 	result, err := database.Retrieve(input["username"])
 	if result == nil {
-		http.Error(res, "Why are you logging out when you aren't a user in the first place?", http.StatusUnauthorized)
+		http.Error(res, "Username not found", http.StatusUnauthorized)
 		return
 	} else if err != nil {
 		// if there was an error, let the client know
@@ -129,9 +129,10 @@ func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Invalid password", http.StatusUnauthorized)
 		return
 	}
-	// check if token isn't already deleted
+	// check if token is already deleted
 	if result.Token == nil {
-		http.Error(res, "You are already logged out, why did you request this endpoint?", http.StatusBadRequest)
+		// if it is, no action is needed, so just respond with success
+		res.WriteHeader(http.StatusAccepted)
 		return
 	}
 	// delete token
@@ -211,7 +212,7 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		// send token back to client
-		res.WriteHeader(http.StatusOK)
+		res.WriteHeader(http.StatusAccepted)
 		res.Header().Set("Content-Type", "text/plain")
 		res.Write(token)
 	} else {
