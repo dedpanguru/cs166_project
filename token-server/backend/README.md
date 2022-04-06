@@ -18,6 +18,7 @@
     ```
     * Only takes POST requests
     * Responds with response code 201 and the token string as plaintext on success, 422 on JSON input error (i.e. format doesn't match), 405 for HTTP Method errors (this endpoint only allows POST requests), and 500 on any server-side error.
+    * *Ideally, this endpoint is used to enter a new user into the database*
  2. **/api/login** = user login endpoint
     * Requires JSON body with the following format:
     ```
@@ -53,5 +54,5 @@
     * The ```:resource``` part of the request url should be a filename (e.g. ```/api/assets/treasure.png```)
     * Only takes GET requests
     * Responds with status code 202 and requested file on success, 401 for invalid username, password, or token (response body will tell which one is invalid), 403 if the user is already logged out, 404 if the file isn't found, and 500 for any server-side error
-    * *Ideally this endpoint is requested to test a user's credentials*
+    * *Ideally, this endpoint is requested to test a user's credentials*
 
