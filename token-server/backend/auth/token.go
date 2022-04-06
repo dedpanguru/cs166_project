@@ -14,7 +14,7 @@ var secret = []byte(os.Getenv("SECRET"))
 func GenerateJWT(username string) ([]byte, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Issuer:    username,
-		ExpiresAt: time.Now().Add(time.Minute * 60).Unix(),
+		ExpiresAt: time.Now().Add(time.Hour).UTC().Unix(),
 	})
 	tokenString, err := token.SignedString(secret)
 	if err != nil {
@@ -44,9 +44,5 @@ func ValidateJWT(token []byte) error {
 			token.Valid = true
 			return secret, nil
 		})
-	if err != nil {
-		return err
-	} else {
-		return nil
-	}
+	return err
 }
