@@ -24,7 +24,7 @@ services:
      - ./backend:/app
     ports:
      - ${SERVER_PORT-8080}:8080
-    enviornment:
+    environment:
      - SECRET=secretsecretsecret
     depends_on:
       - database
