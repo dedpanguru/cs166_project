@@ -7,13 +7,9 @@ import (
 	"token-server/auth"
 
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
 	// instantiate router
 	router := mux.NewRouter()
 	// set up routes
