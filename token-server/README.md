@@ -2,7 +2,7 @@
 1. Install Docker on your computer
 2. Clone repository onto your computer
 3. Optionally, configure the backend's secret key in the ```docker-compose.yml``` file
-  * Default secret key is ```secretsecretsecret```
+   * Default secret key is ```secretsecretsecret```
 4. Run ```docker compose up``` 
 5. Backend will be running on http://0.0.0.0:<port assigned to it in the ```docker-compose.yml```, defaults to 8080>
    * customize which port to run it on by setting your system's ```SERVER_PORT``` environment variable to the desired port number
