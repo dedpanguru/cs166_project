@@ -216,7 +216,7 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 	if refreshNeeded {
 		// refresh token if necessary
 		// generate a new token
-		token, err := GenerateJWT(input["username"])
+		result.Token, err = GenerateJWT(input["username"])
 		if err != nil {
 			// if there was an error, let the client know
 			http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -226,15 +226,16 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 		if err = database.Update(&database.User{
 			Username: input["username"],
 			Password: []byte(input["password"]),
-			Token:    token,
+			Token:    result.Token,
 		}); err != nil {
 			// if there was an error, let the client know
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		res.Write(token)
+		res.Write(result.Token)
+		return
 	}
-	res.Write(result.Token)
+	http.Error(res, "User already logged in", http.StatusUnauthorized)
 }
 
 // RegistrationHandler - grants tokens to new users and refreshes tokens for old ones

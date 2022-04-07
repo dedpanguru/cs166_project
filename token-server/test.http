@@ -1,0 +1,36 @@
+POST http://0.0.0.0:8080/api/logout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDkyOTg5NDMsImlzcyI6ImhlbGxvIn0.Gg8OrHaqetQQbxZP5P5jKEYH0Hx7rENm0of03DkUjtQ
+
+{
+  "username":"hello",
+  "password":"world"
+}
+
+###
+GET http://0.0.0.0:8080/api/assets/treasure.png
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDkyOTg5NDMsImlzcyI6ImhlbGxvIn0.Gg8OrHaqetQQbxZP5P5jKEYH0Hx7rENm0of03DkUjtQ
+
+{
+  "username":"hello",
+  "password":"world"
+}
+
+###
+POST http://0.0.0.0:8080/api/login
+Content-Type: application/json
+
+{
+  "username":"hello",
+  "password":"world"
+}
+
+###
+POST http://0.0.0.0:8080/api/register
+Content-Type: application/json
+
+{
+  "username":"hello",
+  "password":"world"
+}
