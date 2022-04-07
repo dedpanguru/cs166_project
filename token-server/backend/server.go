@@ -16,7 +16,7 @@ func main() {
 	router.HandleFunc("/api/register", auth.RegistrationHandler).Methods("POST")
 	router.HandleFunc("/api/login", auth.LoginHandler).Methods("POST")
 	router.HandleFunc("/api/logout", auth.LogoutHandler).Methods("POST")
-	router.Handle("/api/assets/{resource}", auth.TokenMiddleware(auth.Resource)).Methods("GET")
+	router.HandleFunc("/api/assets/{resource}", auth.ResourceHandler).Methods("GET")
 	router.Use(auth.Middleware)
 	// start router
 	log.Fatal(http.ListenAndServe(os.Getenv("DOMAIN")+":8080", router))

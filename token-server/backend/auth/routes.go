@@ -12,8 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var Resource = http.HandlerFunc(ResourceHandler) // requires custom middleware, so make a handler function from it
-var err error                                    // single error object, err will be constantly reassigned and returned if not empty
+var err error // single error object, err will be constantly reassigned and returned if not empty
 
 // ResourceHandler - Verifies user credentials before transferring a resource file back from the assets folder
 func ResourceHandler(res http.ResponseWriter, req *http.Request) {
@@ -22,13 +21,6 @@ func ResourceHandler(res http.ResponseWriter, req *http.Request) {
 	var input map[string]string
 	if err = json.NewDecoder(req.Body).Decode(&input); err != nil { // inform client of any error in decoding
 		http.Error(res, err.Error(), http.StatusUnprocessableEntity)
-		return
-	}
-	// verify input token
-	token := strings.Split(req.Header.Get("Authorization"), " ")[1]
-	err = ValidateJWT([]byte(token))
-	if err != nil {
-		http.Error(res, "Invalid token", http.StatusUnauthorized)
 		return
 	}
 	// user should exist already so check for their existence in the database
@@ -48,26 +40,30 @@ func ResourceHandler(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Invalid credentials", http.StatusUnauthorized)
 		return
 	}
-	// verify token in database == token in input
-	if result.Token == nil {
-		// user was logged out
-		http.Error(res, "User is logged out", http.StatusForbidden)
+
+	// verify input token
+	token := strings.Split(req.Header.Get("Authorization"), " ")[1]
+	err = ValidateJWT([]byte(token))
+	if err != nil {
+		http.Error(res, "Invalid token", http.StatusUnauthorized)
 		return
 	}
 
-	// validate the token in db
-	if string(result.Token) != token {
-		//token in database != input token
-		http.Error(res, "Invalid token", http.StatusUnauthorized)
+	// check if user is already logged out
+	if result.Token == nil {
+		http.Error(res, "User is logged out", http.StatusForbidden)
 		return
-	} else {
-		// validate token in database
+	} else if string(result.Token) == token {
+		// verify token in db
 		err = ValidateJWT(result.Token)
 		if err != nil {
 			//token in database is invalid
 			http.Error(res, err.Error(), http.StatusUnauthorized)
 			return
 		}
+	} else { // token in db != input token
+		http.Error(res, "Invalid token", http.StatusUnauthorized)
+		return
 	}
 
 	// credentials are valid now, now check if requested resource exists
@@ -103,8 +99,6 @@ func ResourceHandler(res http.ResponseWriter, req *http.Request) {
 func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 	// delete only the token from the database
 
-	// first verify that they are logged in
-
 	//decode json data
 	var input map[string]string
 	if err := json.NewDecoder(req.Body).Decode(&input); err != nil { // inform client of any error in decoding
@@ -129,12 +123,38 @@ func LogoutHandler(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Invalid password", http.StatusUnauthorized)
 		return
 	}
+	// verify input token
+	token := strings.Split(req.Header.Get("Authorization"), " ")[1]
+	err = ValidateJWT([]byte(token))
+	if err != nil {
+		http.Error(res, "Invalid token", http.StatusUnauthorized)
+		return
+	}
 	// check if token is already deleted
 	if result.Token == nil {
 		// if it is, no action is needed, so just respond with success
 		res.WriteHeader(http.StatusAccepted)
 		return
+	} else if string(result.Token) == token {
+		// validate token in database
+		err = ValidateJWT(result.Token)
+		if err != nil {
+			if err.Error() == "Token Expired" {
+				// token in database is expired, so deleting it will only be a waste of computing power
+				// just do nothing
+				res.WriteHeader(http.StatusAccepted)
+				return
+			} else {
+				//token in database is invalid
+				http.Error(res, err.Error(), http.StatusUnauthorized)
+				return
+			}
+		}
+	} else { // token in db != input token
+		http.Error(res, "Invalid token", http.StatusUnauthorized)
+		return
 	}
+
 	// delete token
 	if err = database.Delete(result); err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -191,7 +211,8 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 			}
 		}
 	}
-
+	res.WriteHeader(http.StatusAccepted)
+	res.Header().Set("Content-Type", "text/plain")
 	if refreshNeeded {
 		// refresh token if necessary
 		// generate a new token
@@ -211,11 +232,9 @@ func LoginHandler(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		res.Write(token)
 	}
-	// send token back to client
-	res.WriteHeader(http.StatusAccepted)
-	res.Header().Set("Content-Type", "text/plain")
-	res.Write(token)
+	res.Write(result.Token)
 }
 
 // RegistrationHandler - grants tokens to new users and refreshes tokens for old ones
