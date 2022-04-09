@@ -2,23 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  * {
-    @apply font-roobert;
-  }
-}
-
-@font-face {
-  src: url(/public/fonts/Roobert.ttf);
-  font-weight: 400;
-  font-family: "roobert";
-}
-
 * {
   margin: 0;
+  font-family: "Inter", sans-serif;
 }
 
 body {
-  background: #050505;
-  color: white;
+  background: #ffffff;
+  color: black;
 }
