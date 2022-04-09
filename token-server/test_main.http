@@ -1,11 +1,11 @@
 GET http://localhost:8080/api/assets/treasure.png
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDk0OTA5MDIsImlhdCI6MTY0OTQ4NzMwMiwic3ViIjoicHkifQ.xEPyGT6z2mc1C98dvKFUOysUWtIlq_E3n2QgdeSsoW8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDk1MzQxNzYsImlhdCI6MTY0OTUzMDU3Niwic3ViIjoicHkifQ.lSHVP56b-BH_9gjoBJnfbiy-IqMFYwZ7XaR-lgB74FQ
 
 ###
 POST http://localhost:8080/api/logout
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDk0OTA5MDIsImlhdCI6MTY0OTQ4NzMwMiwic3ViIjoicHkifQ.xEPyGT6z2mc1C98dvKFUOysUWtIlq_E3n2QgdeSsoW8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDk1MzM3NjUsImlhdCI6MTY0OTUzMDE2NSwic3ViIjoicHkifQ.dh9cow57qZxLKGv154Q5ibvJTfrEGYG2YeNTAVxEfwA
 
 {
   "username": "py",

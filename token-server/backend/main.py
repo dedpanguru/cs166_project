@@ -13,7 +13,6 @@ from .schema import Credentials
 app = FastAPI()
 security = AuthHandler()
 
-routes = ['login', 'register', 'logout']
 
 
 @app.middleware('http')
@@ -21,7 +20,7 @@ async def middleware(request: Request, call_next):
     i = request.url.path.split('/').index('api')+1 if 'api' in request.url.path.split('/') else None
     if i:
         if len(request.url.path.split('/')) >= i:
-            if request.url.path.split('/')[i] in routes:
+            if request.url.path.split('/')[i] in ('login', 'register','logout', 'assets'):
                 # check content-type header
                 if request.headers['Content-Type']:
                     if request.headers['Content-Type'] == 'application/json':
@@ -90,8 +89,8 @@ async def resource(filename: str, token: str = Depends(security.validate_auth_he
     if token_is_in_db(token, db):
         db.close()
         # check if resource is in assets folder
-        if os.path.exists('./assets/' + filename):
-            return './assets/' + filename
+        if os.path.exists('./backend/assets/'+filename):
+            return './backend/assets/'+filename
         else:  # resource not found, return 404
             raise HTTPException(status_code=404, detail='File Not Found')
     raise HTTPException(status_code=401, detail='Invalid token')
@@ -109,9 +108,7 @@ def get_user(username: str, db: Session) -> User:
 
 
 def token_is_in_db(token: str, db: Session) -> bool:
-    if db.query(User).filter(User.token == token).first():
-        return True
-    return False
+    return db.query(User).filter(User.token == token).first() is not None
 
 
 def update_user_token(user: User, db: Session) -> None:
