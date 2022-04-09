@@ -12,14 +12,14 @@ const Home = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center">
-      <h1 className="font-bold text-6xl">Welcome</h1>
-      {/* <p className="m-2">Please login</p> */}
+      <h1 className="font-bold text-6xl">Welcome!</h1>
+      <p className="">Please enter your details.</p>
       <form className="m-8 space-y-4">
         <div>
           <LabelPrimitive.Root htmlFor="name">Name</LabelPrimitive.Root>
           <input
             id="name"
-            className="rounded-md border-2 border-blue-400 w-full p-2 focus:outline-none bg-transparent"
+            className="rounded-md border-2 border-primary w-full p-2 focus:outline-none bg-transparent"
             type="text"
             autocomplete="off"
           />
@@ -28,20 +28,20 @@ const Home = () => {
           <LabelPrimitive.Root htmlFor="name">Password</LabelPrimitive.Root>
           <input
             id="password"
-            className="rounded-md border-2 border-blue-400 w-full p-2 focus:outline-none bg-transparent"
+            className="rounded-md border-2 border-primary w-full p-2 focus:outline-none bg-transparent"
             type="text"
             autocomplete="off"
           />
         </div>
         <div
-          className="bg-blue-400 p-3 rounded-md text-center cursor-pointer"
+          className="bg-primary p-3 rounded-md text-center cursor-pointer hover:scale-105 transition ease-linear"
           onClick={() => hanlder()}
         >
           Log In
         </div>
         <div className="w-full flex justify-between space-x-4">
           <p>Don't have an account yet?</p>
-          <Link className="text-blue-400" to="/register">
+          <Link className="text-primary" to="/register">
             Register
           </Link>
         </div>

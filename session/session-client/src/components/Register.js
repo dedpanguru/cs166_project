@@ -11,7 +11,7 @@ const Register = () => {
           <LabelPrimitive.Root htmlFor="name">Name</LabelPrimitive.Root>
           <input
             id="name"
-            className="rounded-md border-2 border-blue-400 w-full p-2 focus:outline-none bg-transparent"
+            className="rounded-md border-2 border-primary w-full p-2 focus:outline-none bg-transparent"
             type="text"
             autocomplete="off"
           />
@@ -20,16 +20,16 @@ const Register = () => {
           <LabelPrimitive.Root htmlFor="name">Password</LabelPrimitive.Root>
           <input
             id="password"
-            className="rounded-md border-2 border-blue-400 w-full p-2 focus:outline-none bg-transparent"
+            className="rounded-md border-2 border-primary w-full p-2 focus:outline-none bg-transparent"
             type="text"
             autocomplete="off"
           />
         </div>
-        <div className="bg-blue-400 p-3 rounded-md text-center cursor-pointer">
+        <div className="bg-primary p-3 rounded-md text-center cursor-pointer hover:scale-105 transition ease-linear">
           Register
         </div>
         <div className="items-center justify-center text-center">
-          <Link className="text-blue-400" to="/">
+          <Link className="text-primary" to="/">
             Return to login
           </Link>
         </div>
