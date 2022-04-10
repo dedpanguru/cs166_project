@@ -30,7 +30,7 @@
    - Attackers can steal or tag along with valid client requests if they intercept JWTs as they are sent to and from the client and server
 
 # Our Interpretation of the JWT system
- - We decided enhance the security of the traditional username and password system with JWTs.
+ - We decided to enhance the security of the traditional username and password system with JWTs.
  - This would require clients to register an account to receive a JWT, which they would use to access a restricted resource on the server.
  - Clients can also log out to delete their JWT from the server's database, and log back in to get a new JWT.
  - Our system provides a way for clients to have more control over their access to the server so their information isn't abused.
