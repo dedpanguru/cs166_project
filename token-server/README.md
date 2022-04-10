@@ -19,7 +19,7 @@
    - Specifically the token should be stored in the request's *Authorization* header and should follow the word *Bearer* (separated by space).
    - E.g. ```Authorization: Bearer <token>```
  - JWTs also have an expiration date, so clients will have to request the server for another JWT when their JWT expires.
- - You can learn more at jwt.io[https://jwt.io/]
+ - You can learn more at jwt.io(https://jwt.io/)
 
 ## Pros of JSON Web Tokens
  - Completely stateless, meaning the server doesn't have maintain any knowledge of who the client is.
