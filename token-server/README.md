@@ -7,8 +7,7 @@
    * Customize which *port* to run it on by setting your system's ```SERVER_PORT``` environment variable to the desired port number before running
    * If you are fine with that URL, then you don't have to do anything, just make sure that a different process isn't already bound to that URL on your system
 5. Run ```docker compose up```
-6. If you want to see the documentation and play around with the API, go to http://127.0.0.1:8080/docs 
-   * **Important Note**: the docs page does not enforce the security but the actual API does
+6. If you want to see the documentation and play around with the API, go to http://127.0.0.1:8080/docs
 7. If you want to test the API manually, I would recommend using the Postman app or if you have VSCode installed on your machine, you could use the Thunder Client extension or use the REST Client extension to run requests outlined in ```.http``` files.
    * I have provided an ```example.http`` file in this directory if you do end up using the REST Client extension.
 
