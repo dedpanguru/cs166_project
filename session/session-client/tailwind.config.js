@@ -5,9 +5,6 @@ module.exports = {
       colors: {
         primary: "#ff3244",
       },
-      fontFamily: {
-        roobert: "roobert",
-      },
     },
   },
   plugins: [],

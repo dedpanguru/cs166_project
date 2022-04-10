@@ -1,11 +1,11 @@
 GET http://localhost:8080/api/assets/treasure.png
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDk1MzQxNzYsImlhdCI6MTY0OTUzMDU3Niwic3ViIjoicHkifQ.lSHVP56b-BH_9gjoBJnfbiy-IqMFYwZ7XaR-lgB74FQ
+Authorization: Bearer <token>
 
 ###
 POST http://localhost:8080/api/logout
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDk1MzM3NjUsImlhdCI6MTY0OTUzMDE2NSwic3ViIjoicHkifQ.dh9cow57qZxLKGv154Q5ibvJTfrEGYG2YeNTAVxEfwA
+Authorization: Bearer <token>
 
 {
   "username": "py",
@@ -30,5 +30,4 @@ Content-Type: application/json
 }
 
 ###
-
 GET http://127.0.0.1:8080/docs
