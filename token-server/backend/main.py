@@ -14,13 +14,12 @@ app = FastAPI()
 security = AuthHandler()
 
 
-
 @app.middleware('http')
 async def middleware(request: Request, call_next):
     i = request.url.path.split('/').index('api')+1 if 'api' in request.url.path.split('/') else None
     if i:
         if len(request.url.path.split('/')) >= i:
-            if request.url.path.split('/')[i] in ('login', 'register','logout', 'assets'):
+            if request.url.path.split('/')[i] in ('login', 'register','logout'):
                 # check content-type header
                 if request.headers['Content-Type']:
                     if request.headers['Content-Type'] == 'application/json':
