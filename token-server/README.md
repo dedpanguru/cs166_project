@@ -1,4 +1,4 @@
-# Setup
+# How to Setup and Run the server
 1. Install Docker on your computer
 2. Clone repository onto your computer
 3. Optionally, configure the backend's secret key in the ```docker-compose.yml``` file
