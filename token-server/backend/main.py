@@ -172,3 +172,4 @@ def validate_credentials(credentials: Credentials,
 
 if __name__ == '__main__':
     uvicorn.run('main:app', port=8080, reload=False)
+    
