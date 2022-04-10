@@ -8,7 +8,7 @@
    * If you are fine with that URL, then you don't have to do anything, just make sure that a different process isn't already bound to that URL on your system
 5. Run ```docker compose up```
 6. If you want to see the documentation and play around with the API, go to http://127.0.0.1:8080/docs
-7. If you want to test the API manually, I would recommend using docs page, the Postman app, or if you have VSCode installed on your machine, you could use the Thunder Client extension or use the REST Client extension to run requests outlined in ```.http``` files. JetBrains IDEs also can support .http test files.
+7. If you want to test the API manually, I would recommend using the ```/docs``` endpoint as listed above, the Postman app, or if you have VSCode installed on your machine, you could use the Thunder Client extension or use the REST Client extension to run requests outlined in ```.http``` files. JetBrains IDEs also can support .http test files.
    * I have provided an ```example.http`` file in this directory if you do end up using the REST Client extension or a JetBrains IDE.
 
 # What are JSON Web Tokens?
