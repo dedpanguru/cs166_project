@@ -29,16 +29,17 @@
  - Very vulnerable to Man-In-The-Middle attacks.
    - Attackers can steal or tag along with valid client requests if they intercept JWTs as they are sent to and from the client and server
 
-# Our interpretation of the JWT system
+# Our Interpretation of the JWT system
  - We decided enhance the security of the traditional username and password system with JWTs.
  - This would require clients to register an account to receive a JWT, which they would use to access a restricted resource on the server.
  - Clients can also log out to delete their JWT from the server's database, and log back in to get a new JWT.
  - Our system provides a way for clients to have more control over their access to the server so their information isn't abused.
- - The system also allows the server to trace JWTs to user accounts.
+ - The system also allows the server to trace JWTs to user accounts and have JWT validity directly dependent on valid user credentials by signing tokens with a user's username in addition to the server's secret key.
 
-# Our implementation
+# Our Implementation
  - The server is implemented using the FastAPI framework which utilizes Python scripts to create a high-performance backend API.
- - The server will store client credentials and JWTs in a PostgresQL database. 
+ - The server will store client credentials and JWTs in a PostgreSQL database. 
    - Passwords will be hashed using the bcrypt algorithim before being stored in the database.
    - JWTs will be signed by the server and encrypted with the standard HMAC + SHA-256 (a.k.a HS256) algorithim before being stored and sent back to the user.
    - *All JWTs issued by the server have a 10-minute lifetime*
+ - All protected resources will be stored in the ```/backend/assets``` folder. Add files you want to protect to it before you setup and run the server.
