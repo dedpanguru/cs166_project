@@ -19,7 +19,7 @@ class AuthHandler:
 
     def generate_token(self, username):
         payload = {
-            'exp': datetime.utcnow() + timedelta(days=0, hours=1),
+            'exp': datetime.utcnow() + timedelta(days=0, mins=10),
             'iat': datetime.utcnow(),
             'sub': username
         }
