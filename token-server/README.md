@@ -37,7 +37,7 @@
  - The system also allows the server to trace JWTs to user accounts.
 
 # Our implementation
- - The server is implemented using the FastAPI framework which utilizes Python scripts to create a high-performant backend API.
+ - The server is implemented using the FastAPI framework which utilizes Python scripts to create a high-performance backend API.
  - The server will store client credentials and JWTs in a PostgresQL database. 
    - Passwords will be hashed using the bcrypt algorithim before being stored in the database.
    - JWTs will be signed by the server and encrypted with the standard HMAC + SHA-256 (a.k.a HS256) algorithim before being stored and sent back to the user.
