@@ -41,5 +41,5 @@
  - The server will store client credentials and JWTs in a PostgreSQL database. 
    - Passwords will be hashed using the bcrypt algorithim before being stored in the database.
    - JWTs will be signed by the server and encrypted with the standard HMAC + SHA-256 (a.k.a HS256) algorithim before being stored and sent back to the user.
-   - *All JWTs issued by the server have a 10-minute lifetime*
+   - *All JWTs issued by the server have a 10-minute lifetime.*
  - All protected resources will be stored in the ```/backend/assets``` folder. Add files you want to protect to it before you setup and run the server.
