@@ -79,6 +79,7 @@ async def logout(credentials: Credentials, db: Session = Depends(new_db_conn),
         if not refresh_needed:
             db_record.token = None
             update_user_token(db_record, db)
+            return {'message':'You are officially logged out'}
     finally:
         db.close()
 
