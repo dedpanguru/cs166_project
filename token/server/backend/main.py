@@ -88,9 +88,10 @@ async def logout(credentials: Credentials, db: Session = Depends(new_db_conn),
 async def resource(filename: str, token: str = Depends(security.validate_auth_header), db: Session = Depends(new_db_conn)):
     if token_is_in_db(token, db):
         db.close()
+
         # check if resource is in assets folder
-        if os.path.exists('./assets/'+filename):
-            return './assets/'+filename
+        if os.path.exists('./backend/assets/'+filename):
+            return './backend/assets/'+filename
         else:  # resource not found, return 404
             raise HTTPException(status_code=404, detail='File Not Found')
     raise HTTPException(status_code=401, detail='Invalid token')
