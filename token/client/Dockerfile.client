@@ -1,0 +1,15 @@
+FROM node:16.14.0-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY postcss.config.js ./
+COPY tailwind.config.js ./
+
+COPY ./ ./
+
+RUN npm i
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
