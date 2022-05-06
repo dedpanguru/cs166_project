@@ -16,7 +16,7 @@ POST http://localhost:8080/api/register
 Content-Type: application/json
 
 {
-  "username": "py",
+  "username": "a",
   "password": "python1"
 }
 

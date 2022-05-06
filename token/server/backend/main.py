@@ -32,7 +32,7 @@ async def middleware(request: Request, call_next):
     return await call_next(request)
 
 
-@app.post("/api/register", status_code=202)
+@app.post("/api/register", status_code=201)
 async def register(credentials: Credentials, db: Session = Depends(new_db_conn)):
     # check if user already in db
     if get_user(credentials.username, db):
