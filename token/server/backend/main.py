@@ -32,22 +32,18 @@ async def middleware(request: Request, call_next):
     return await call_next(request)
 
 
-@app.post("/api/register", status_code=201)
+@app.post("/api/register", status_code=202)
 async def register(credentials: Credentials, db: Session = Depends(new_db_conn)):
     # check if user already in db
     if get_user(credentials.username, db):
         raise HTTPException(status_code=401, detail='Username Taken')
-    # generate new token
-    token = security.generate_token(credentials.username)
-    # request db
+    # store user info in db
     create_user(User(
         username=credentials.username,
         password=security.get_password_hash(credentials.password),
-        token=token
+        token=None
     ), db)
     db.close()
-    # send token back
-    return {'token': token}
 
 
 @app.post('/api/login', status_code=202)
