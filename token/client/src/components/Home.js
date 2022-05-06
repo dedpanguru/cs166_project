@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { BsArrowRightShort } from "react-icons/bs";
@@ -34,9 +34,6 @@ const Home = () => {
         setRes(false);
       });
   };
-
-  console.log(username);
-  console.log(password);
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
