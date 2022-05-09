@@ -35,7 +35,7 @@ const Main = () => {
       .post("/api/logout", {
         username: username,
         password: password,
-      })
+      }, config)
       .then((res) => {
         console.log(res);
       })
