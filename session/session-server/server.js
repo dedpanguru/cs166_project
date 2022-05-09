@@ -1,51 +1,26 @@
-const express = require("express");
-const session = require("express-session");
+import express from "express"
+import session from "express-session"
+import {connect, store} from './database/connect.js'
 
-const ONE_HOUR = 1000 * 60 * 60;
+const app = express()
 
-const {
-  PORT = 5000,
-  SESS_NAME = "sid",
-  SESS_LIFETIME = ONE_HOUR,
-  SESS_SECRET = "secret",
-} = process.env;
+connect()
 
-const users = [{ id: 1, name: "Test", password: "test" }];
-
-const app = express();
-
-// create a GET route
-app.get("/express_backend", (req, res) => {
-  res.send({ express: "YOUR EXPRESS BACKEND IS CONNECTED TO REACT" });
-});
-
-app.use(
-  session({
-    name: SESS_NAME,
+app.use(session({
+    secret: process.env.SECRET_KEY || 'secret'.repeat(3),
+    saveUninitialized: falsee,
     resave: false,
-    saveUninitialized: false,
-    secret: SESS_SECRET,
-    cookie: {
-      maxAge: SESS_LIFETIME,
-      sameSite: true,
-    },
-  })
-);
+    store:store,
+}))
 
-app.get("/home", (req, res) => {
-  // console.log(req.session);
-  // const { userId } = req.session;
-  res.send("Homepage.");
-});
+const port = process.env.SERVER_PORT || 8080
 
-app.get("/login", (req, res) => {});
+app.get('/', (req, res)=>{
+    console.log(req.session, req.session.id)
+    req.session.isAuth = true
+    res.send("Hello World")
+})
 
-app.get("/register", (req, res) => {});
-
-app.post("/login", (req, res) => {});
-
-app.post("/register", (req, res) => {});
-
-app.post("/logout", () => {});
-
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+app.listen(port, ()=>{
+    console.log(`Server listening on http://localhost:${port}`)
+})
