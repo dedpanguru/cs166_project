@@ -8,16 +8,16 @@ Content-Type: application/json
 Authorization: Bearer <token>
 
 {
-  "username": "py",
-  "password": "python1"
+  "username": "user",
+  "password": "pass"
 }
 ###
 POST http://localhost:8080/api/register
 Content-Type: application/json
 
 {
-  "username": "a",
-  "password": "python1"
+  "username": "user",
+  "password": "pass"
 }
 
 ###
@@ -25,8 +25,8 @@ POST http://localhost:8080/api/login
 Content-Type: application/json
 
 {
-  "username": "py",
-  "password": "python1"
+  "username": "user",
+  "password": "pass"
 }
 
 ###
