@@ -15,4 +15,5 @@ services:
       dockerfile: Dockerfile.server
     environment:
     - DB_URL=mongodb://username:password@mongodb
-
+    depends_on: 
+    - database
