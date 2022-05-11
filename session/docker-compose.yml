@@ -5,8 +5,12 @@ services:
     image: mongo:latest
     container_name: session-db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=username
-      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    restart: always
+    volumes:
+      - ./mongo/scripts:/docker-entrypoint-initdb.d/
+      - ./mongo/home/mongodb:/home/mongodb
     ports:
       - 27017:27017
     networks:
@@ -18,10 +22,10 @@ services:
       dockerfile: Dockerfile.server
     container_name: session-backend
     environment:
-    - DB_URL=mongodb://host.internal.docker:27017/sessions
+    - DB_URL=mongodb://username:password@database:27017/admin
     depends_on: 
     - database
     ports:
-    - ${SERVER_PORT-8080}:8080
+    - ${SERVER_PORT-8888}:8888
     networks:
       - default

@@ -1,0 +1,11 @@
+GET http://0.0.0.0:8888/
+
+###
+POST http://0.0.0.0:8888/register
+
+{
+    "username": "username",
+    "email": "test@test.com",
+    "password": "password"
+}
+

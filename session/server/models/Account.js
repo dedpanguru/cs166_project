@@ -29,4 +29,4 @@ schema.methods.withdraw = (amount) => {
     return false
 }
 
-exports.Account = mongoose.model('Account',schema)
+module.exports = mongoose.model('Account',schema)

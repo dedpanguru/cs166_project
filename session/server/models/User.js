@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto')
 
 const schema = mongoose.Schema({
     username:{
@@ -28,19 +26,7 @@ const schema = mongoose.Schema({
         required:true
     }
 })
-
-schema.pre('save', async (next)=>{
-    if(!this.isModified('password')){
-        return next()
-    }
-    this.password = await bcrypt.hash(this.password, 10)
-    this.id = crypto.randomBytes(16).toString('hex')
-    this.accountid = crypto.randomBytes(16).toString('hex')
-    next()
-})
-
-schema.methods.comparePassword = async (input) => {
-    return await bcrypt.compare(input, this.password)
+schema.methods.getUserByUserName = (username) => {
+    return User.findOne({username:username})
 }
-
-exports.User = mongoose.model('User', schema)
+module.exports = mongoose.model('User', schema)
