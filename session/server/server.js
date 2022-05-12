@@ -6,7 +6,7 @@ const { default: mongoose } = require("mongoose")
 const { myAccountHandler, depositHandler, transferHandler} = require('./routes/bank.js')
 const crypto = require('crypto')
 const uuid = require('node-uuid')
-const { loginCheck } = require('./routes/middleware.js') 
+const { loggedInCheck, notLoggedInCheck } = require('./routes/middleware.js') 
 const app = express()
 
 app.use(express.json({extended:false}))
@@ -34,15 +34,15 @@ app.get('/', (req, res)=>{
 
 app.post('/register', registerHandler)
 
-app.post('/login', loginCheck, loginHandler)
+app.post('/login', notLoggedInCheck, loginHandler)
 
-app.post('/logout', loginCheck, logoutHandler)
+app.post('/logout', loggedInCheck, logoutHandler)
 
-app.get('/myaccount', loginCheck, myAccountHandler)
+app.get('/myaccount', loggedInCheck, myAccountHandler)
 
-app.post('/deposit', loginCheck, depositHandler)
+app.post('/deposit', loggedInCheck, depositHandler)
 
-app.post('/transfer', loginCheck, transferHandler)
+app.post('/transfer', loggedInCheck, transferHandler)
 
 const url = process.env.DB_URL ? process.env.DB_URL : 'mongodb://username:password@host.docker.internal:27017/admin'
 

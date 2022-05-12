@@ -25,6 +25,7 @@ const myAccountHandler = async (req, res) => {
         }
         // send account id and balance
         res.status(200).send({
+            "username": dbRecord.username,
             "accountID": account.id,
             "balance": account.balance
         })
@@ -56,7 +57,7 @@ const depositHandler = async (req, res) => {
             })
         }
         let amount = req.query.amount
-        account.balance += amount
+        account.balance += Number(amount)
         await account.save()
         .then(_ => {
             res.status(200).send({
@@ -80,6 +81,12 @@ const depositHandler = async (req, res) => {
 const transferHandler = async (req, res) => {
     let username = req.session.user
     let receiverName = req.query.receiver
+    if (username === receiverName){
+        res.status(400).send({
+            message:'You cannot transfer money to yourself!'
+        })
+        return
+    }
     try{
         // get the sender
         let sender = await User.findOne({username:username})
@@ -124,18 +131,19 @@ const transferHandler = async (req, res) => {
             })
         }
         // only transfer if the sender can afford the transfer
-        if (sendingAccount.canWithdraw(amount)){
-            sendingAccount.balance -= amount
+        if (Number(sendingAccount.balance) - Number(amount) >= 0){
+            sendingAccount.balance = Number(sendingAccount.balance) - Number(amount)
             await sendingAccount.save()
-            receivingAccount.balance += amount
+            console.log(`${username} balance = \$${sendingAccount.balance}`)
+            receivingAccount.balance = Number(receivingAccount.balance) + Number(amount)
             await receivingAccount.save()
-            console.log(`${username} transferring \$${amount} to `)
+            console.log(`${receiver} balance = \$${receivingAccount.balance}`)
             res.status(200).send({
                 message: `You have officially transferred \$${amount} to ${receiverName}`
             })
         } else {
             res.status(400).send({
-                message: `Insufficient funds to transfer ${amount}`
+                message: `Insufficient funds to transfer ${amount} from your current balance of ${sendingAccount.balance}`
             })
         }
     } catch(err){

@@ -10,19 +10,21 @@ const loginHandler = async (req, res) => {
         const user = await User.findOne({username})
         if (!user){
             res.status(400).send({message:'User not found'})
+            return
         }
         const passMatch = await bcrypt.compare(password, user.password)
         if (!passMatch){
             res.status(401).send({message:'Password doesn\'t match'})
+            return
         }
         req.session.touch()
         req.session.user=username
         req.session.save()
         res.status(200).send({
-            message: 'You are officially logged in!'
+            message: 'Session has been established'
         })
     } catch(err){
-        console.log(`Error with registering: ${err}`)
+        console.error(`Error with logging in: ${err}`)
         res.status(500).send({message:err.message})
     }
 }
@@ -36,9 +38,14 @@ const logoutHandler = (req, res) => {
 
 const registerHandler = async (req, res) => {
     try{
-        let dbRecord = await User.findOne({username: req.body.username, email: req.body.email})
+        let dbRecord = await User.findOne({username: req.body.username})
         if (dbRecord){
             res.status(400).send({message: "Username taken!"})
+            return
+        }
+        let userWithEmail = await User.findOne({username: req.body.email})
+        if (userWithEmail){
+            res.status(400).send({message: "Email taken!"})
             return
         }
         // username not taken, so store it

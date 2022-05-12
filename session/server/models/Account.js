@@ -17,8 +17,4 @@ const schema = new mongoose.Schema({
     }
 })
 
-schema.methods.canWithdraw = (amount) => {
-    return this.balance - amount >= 0
-}
-
 module.exports = mongoose.model('Account',schema)

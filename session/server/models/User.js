@@ -26,7 +26,5 @@ const schema = mongoose.Schema({
         required:true
     }
 })
-schema.methods.getUserByUserName = (username) => {
-    return User.findOne({username:username})
-}
+
 module.exports = mongoose.model('User', schema)
