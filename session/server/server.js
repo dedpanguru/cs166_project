@@ -3,7 +3,10 @@ const session = require("express-session")
 const cookieParser = require('cookie-parser')
 const { registerHandler, loginHandler, logoutHandler } = require("./routes/auth.js")
 const { default: mongoose } = require("mongoose")
-
+const { myAccountHandler, depositHandler, transferHandler} = require('./routes/bank.js')
+const crypto = require('crypto')
+const uuid = require('node-uuid')
+const { loginCheck } = require('./routes/middleware.js') 
 const app = express()
 
 app.use(express.json({extended:false}))
@@ -16,10 +19,11 @@ app.use(session({
     resave: false,
     key: 'sid',
     cookie:{
-        httpOnly: true,
-        secure: true,
         maxAge:10*60*1000 
     },
+    genid: _ => {
+        return crypto.createHash('sha256').update(uuid.v1()).update(crypto.randomBytes(256)).digest("hex");
+    }
 }))
 
 const port = process.env.SERVER_PORT || 8888
@@ -30,9 +34,15 @@ app.get('/', (req, res)=>{
 
 app.post('/register', registerHandler)
 
-app.post('/login', loginHandler)
+app.post('/login', loginCheck, loginHandler)
 
-app.post('/logout', logoutHandler)
+app.post('/logout', loginCheck, logoutHandler)
+
+app.get('/myaccount', loginCheck, myAccountHandler)
+
+app.post('/deposit', loginCheck, depositHandler)
+
+app.post('/transfer', loginCheck, transferHandler)
 
 const url = process.env.DB_URL ? process.env.DB_URL : 'mongodb://username:password@host.docker.internal:27017/admin'
 

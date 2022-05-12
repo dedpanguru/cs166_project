@@ -5,11 +5,6 @@ const crypto = require('crypto');
 
 
 const loginHandler = async (req, res) => {
-    if (req.session.user && res.session.sid){
-        res.status(400).send({
-            message: 'You are already logged in!'
-        })
-    } 
     const {username, password} = req.body
     try{
         const user = await User.findOne({username})
@@ -22,6 +17,7 @@ const loginHandler = async (req, res) => {
         }
         req.session.touch()
         req.session.user=username
+        req.session.save()
         res.status(200).send({
             message: 'You are officially logged in!'
         })
@@ -32,11 +28,6 @@ const loginHandler = async (req, res) => {
 }
 
 const logoutHandler = (req, res) => {
-    if (!req.session.user && !res.session.sid){
-        res.status(400).send({
-            message:'You are not logged in'
-        })
-    }
     req.session.destroy()
     res.status(200).send({
         message:'You are officially logged out!'
@@ -45,7 +36,7 @@ const logoutHandler = (req, res) => {
 
 const registerHandler = async (req, res) => {
     try{
-        let dbRecord = await User.findOne({username: req.body.username})
+        let dbRecord = await User.findOne({username: req.body.username, email: req.body.email})
         if (dbRecord){
             res.status(400).send({message: "Username taken!"})
             return

@@ -1,13 +1,13 @@
-const isLoggedIn = (req, res, next) => {
-    if(req.session.user && res.session.sid){
+const loginCheck = (req,res,next) => {
+    if(req.session.user){
         next()
-    } else {
+    }else{
         res.status(401).send({
-            message: 'You are not logged in!'
+            message:'You are not logged in!'
         })
     }
 }
 
 module.exports = {
-    isLoggedIn
+    loginCheck
 }
