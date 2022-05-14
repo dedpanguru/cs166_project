@@ -12,7 +12,7 @@
      - returns status code 200 and `'Hello World'` everytime
      - Use this to verify that the server is indeed running
 
-2. `/register` = registration endpoint -> creates a user profile and their accounr
+2. `/register` = registration endpoint -> creates a user profile and their account
      - only takes POST requests
      - requires JSON body of 
     ```
