@@ -7,6 +7,7 @@ const { myAccountHandler, depositHandler, transferHandler} = require('./routes/b
 const crypto = require('crypto')
 const uuid = require('node-uuid')
 const { loggedInCheck, notLoggedInCheck } = require('./routes/middleware.js') 
+
 const app = express()
 
 app.use(express.json({extended:false}))
