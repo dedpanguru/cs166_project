@@ -43,10 +43,11 @@ const depositHandler = async (req, res) => {
         // get the User
         let dbRecord = await User.findOne({username:username})
         if(!dbRecord){
-            console.log(`User with username ${input} not found in database`)
+            console.log(`User with username ${username} not found in database`)
             res.status(400).send({
                 message:'You are not a registered user!'
             })
+            return
         }
         // find the account from the user id
         let account = await Account.findOne({userid:dbRecord.id})
@@ -55,8 +56,15 @@ const depositHandler = async (req, res) => {
             res.status(400).send({
                 message:'There is no account registered to this username!'
             })
+            return
         }
         let amount = req.query.amount
+        if(!amount){
+            res.status(400).send({
+                message:'Query parameter "amount" missing'
+            })
+            return
+        }
         account.balance += Number(amount)
         await account.save()
         .then(_ => {
@@ -81,8 +89,14 @@ const depositHandler = async (req, res) => {
 const transferHandler = async (req, res) => {
     let username = req.session.user
     let receiverName = req.query.receiver
-    if (username === receiverName){
+    if (!receiverName){
         res.status(400).send({
+            message:'Query Parameter "receiver" missing!'
+        })
+        return
+    }
+    if (username === receiverName){
+        res.status(403).send({
             message:'You cannot transfer money to yourself!'
         })
         return
@@ -125,10 +139,17 @@ const transferHandler = async (req, res) => {
         }
         // conduct the transfer
         let amount = req.query.amount
+        if(!amount){
+            res.status(400).send({
+                message:'Query Parameter "amount" missing!'
+            })
+            return
+        }
         if (Number(amount) == 'NaN'){
             res.status(422).send({
                 message: `Couldn't understand request: ${amount} isn't a number`
             })
+            return
         }
         // only transfer if the sender can afford the transfer
         if (Number(sendingAccount.balance) - Number(amount) >= 0){
@@ -142,7 +163,7 @@ const transferHandler = async (req, res) => {
                 message: `You have officially transferred \$${amount} to ${receiverName}`
             })
         } else {
-            res.status(400).send({
+            res.status(403).send({
                 message: `Insufficient funds to transfer ${amount} from your current balance of ${sendingAccount.balance}`
             })
         }

@@ -5,11 +5,30 @@ const crypto = require('crypto');
 
 
 const loginHandler = async (req, res) => {
-    const {username, password} = req.body
+    const {username, email, password} = req.body
+    if (!password){
+        res.status(422).send({
+            message:'Credentials missing in JSON body'
+        })
+        return
+    }
     try{
-        const user = await User.findOne({username})
-        if (!user){
-            res.status(400).send({message:'User not found'})
+        if (username){
+            var user = await User.findOne({username:username})
+            if (!user){
+                res.status(400).send({message:'Username not found'})
+                return
+            }
+        } else if (email){
+            var user = await User.findOne({email:email})
+            if (!user){
+                res.status(400).send({message:'Email not found'})
+                return
+            }
+        } else {
+            res.status(422).send({
+                message:'Credentials missing in JSON body'
+            })
             return
         }
         const passMatch = await bcrypt.compare(password, user.password)
@@ -18,7 +37,7 @@ const loginHandler = async (req, res) => {
             return
         }
         req.session.touch()
-        req.session.user=username
+        req.session.user=user.username
         req.session.save()
         res.status(200).send({
             message: 'Session has been established'
@@ -37,6 +56,13 @@ const logoutHandler = (req, res) => {
 }
 
 const registerHandler = async (req, res) => {
+    const {username, email, password} = req.body
+    if (!username && !email && !password){
+        res.status(422).send({
+            message:'Credentials missing in JSON body'
+        })
+        return
+    }
     try{
         let dbRecord = await User.findOne({username: req.body.username})
         if (dbRecord){
