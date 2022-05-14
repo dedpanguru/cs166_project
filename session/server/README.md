@@ -68,7 +68,7 @@
 6. `/deposit` = deposit endpoint -> adds account balance 
      - Only takes POST requests
      - Requires 1 query parameter: `amount` (which is the amount you want to deposit)
-          - e.g http://localhost:8888/deposit?amount=1000 is the desired format
+          - e.g http://localhost:8888/deposit?amount=1000
      - Returns status code 400 if the `amount` query parameter is missing
      - Returns status code 401 if the user isn't logged in
      - Returns status code 500 on server error
@@ -77,6 +77,7 @@
 7. `/transfer` = transfer endpoint -> transfers a specified amount of money from the current user logged in
      - Only takes POST requests
      - Requires 2 query parameters: `receiver` (the **username** of the account you want to transfer money to) and `amount` (the amount you want to transfer)
+          - e.g. http://localhost:8888/deposit?receiver=totalNotAnAttacker&amount=1000
      - Returns status code 403 if receiver's username is the same as the current user's username or if the user doesn't have enough account balance to make the transfer
           - JSON error message will specifiy which 
      - Returns status code 401 if user isn't logged in
