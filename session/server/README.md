@@ -2,9 +2,10 @@
 
 ## Setup
 1. Ensure you have Docker and Docker Compose installed on your computer
-2. Run `docker compose up`
+2. Clone this repository and cd your way into this subdirectory
+3. Run `docker compose up`
     - If you need to edit the code, you'll have to build new images to see the changes. Do this by running `docker compose down` to kill the currently running containers (which will wipe the data in the database). Then run `docker compose build` to add the new changes to the build. Then finally run `docker compose up` to run the new code.
-3. Server should be running on http://localhost:8888
+4. Server should be running on http://localhost:8888
 
 ## The API
 1. `/` = test endpoint
