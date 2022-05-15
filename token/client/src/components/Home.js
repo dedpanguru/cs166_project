@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-import * as LabelPrimitive from "@radix-ui/react-label";
+import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { BsArrowRightShort } from "react-icons/bs";
-import Main from "./Main";
 import useStore from "../lib/stores";
 
 const Home = () => {
@@ -36,9 +34,6 @@ const Home = () => {
         setRes(false);
       });
   };
-
-  console.log(username);
-  console.log(password);
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">

@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { FaUserSecret } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useStore from "../lib/stores";
 
 const Main = () => {
-  const [visible, setVisible] = useState(false);
+  const [img, setImg] = useState();
 
   const navigate = useNavigate();
 
@@ -14,14 +13,29 @@ const Main = () => {
   const password = useStore((state) => state.password);
   const token = useStore((state) => state.token);
 
-  console.log(username);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const getImgHandler = () => {
+    fetch("/api/assets/treasure.png", config)
+      .then((res) => {
+        console.log(res);
+        setImg(res.url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const logoutHandler = () => {
     axios
       .post("/api/logout", {
         username: username,
         password: password,
-      })
+      }, config)
       .then((res) => {
         console.log(res);
       })
@@ -40,23 +54,15 @@ const Main = () => {
           </h1> */}
           {/* <p>Here are your session details.</p> */}
         </div>
-        <div
-          className="rounded-md border border-black/50/50 w-96 h-72 p-8 mt-4 flex flex-col items-start justify-center shadow-xl cursor-pointer select-none group"
-          onMouseDown={() => setVisible(!visible)}
-        >
-          {visible ? (
-            <>
-              <p className="z-50 mb-2 uppercase text-xs tracking-wide text-black">
-                Token ID
-              </p>
-              <div className="w-full rounded-md bg-black/5 p-2">
-                <p className="w-fit break-all">{token}</p>
-              </div>
-            </>
+        <div className="rounded-md border border-black/50/50 w-96 h-72 p-8 mt-4 flex flex-col items-center justify-center shadow-xl  select-none group">
+          {img ? (
+            <img src={img} />
           ) : (
-            <div className="w-full flex-col flex space-y-2 items-center justify-center text-5xl group-hover:scale-105 transition duration-300 ease-linear">
-              <FaUserSecret className="shadow-xl" />
-              {/* <p className="text-sm">Click me to reveal.</p> */}
+            <div
+              className="bg-black flex flex-row items-center justify-center w-full shadow-lg mt-8 text-bold p-3 text-white rounded-2xl text-center cursor-pointer hover:scale-105 transition ease-linear"
+              onClick={() => getImgHandler()}
+            >
+              Get Image
             </div>
           )}
         </div>
