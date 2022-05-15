@@ -6,24 +6,6 @@ import Register from "./components/Register";
 import Main from "./components/Main";
 
 function App() {
-  const [data, setData] = useState(null);
-
-  async function callBackendAPI() {
-    const response = await fetch("/express_backend");
-    const body = await response.json();
-
-    if (response.status !== 200) {
-      throw Error(body.message);
-    }
-    return body;
-  }
-
-  useEffect(() => {
-    callBackendAPI()
-      .then((res) => setData(res.express))
-      .catch((err) => console.log(err));
-  }, []);
-
   return (
     <Routes>
       <Route path="/" element={<Home />} />
