@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  database:
+    image: mongo:latest
+    container_name: session-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    restart: always
+    volumes:
+      - ./mongo/scripts:/docker-entrypoint-initdb.d/
+      - ./mongo/home/mongodb:/home/mongodb
+    ports:
+      - 27017:27017
+    networks:
+      - default
+  
+  backend:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile.server
+    container_name: session-backend
+    environment:
+    - DB_URL=mongodb://username:password@database:27017/admin
+    depends_on: 
+    - database
+    ports:
+    - ${SERVER_PORT-8888}:8888
+    networks:
+      - default
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.client
+    container_name: session-client
+    volumes:
+    - ./client:/app
+    - /app/node_modules
+    ports:
+    - ${CLIENT_PORT-3000}:3000
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+    networks:
+      - default
+
+  spoof:
+    build:
+      context: ./spoofed-client
+      dockerfile: Dockerfile.client
+    container_name: session-spoof
+    volumes:
+    - ./spoofed-client:/app
+    - /app/node_modules
+    ports:
+    - ${CLIENT_PORT-3001}:3001
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - frontend
+    networks:
+      - default
+
